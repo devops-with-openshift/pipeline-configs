@@ -1,0 +1,42 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "jenkins-oauth-template"
+    },
+    "labels": {
+        "template": "jenkins-oauth-template"
+    },
+    "parameters": [
+        {
+            "description": "The name for the oauth client.",
+            "name": "OAUTH_CLIENT_NAME",
+            "value": "jenkins-oauth",
+            "required": true
+        },
+        {
+            "description": "Oauth client secret",
+            "name": "OAUTH_CLIENT_SECRET",
+            "from": "user[a-zA-Z0-9]{64}",
+            "generate": "expression"
+        },
+        {
+            "description": "The name for the oauth client.",
+            "name": "OAUTH_CLIENT_REDIRECT_URI",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "OAuthClient",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "\${OAUTH_CLIENT_NAME}"
+            },
+            "secret": "\${OAUTH_CLIENT_SECRET}",
+            "redirectURIs": [
+                "\${OAUTH_CLIENT_REDIRECT_URI}"
+            ]
+        }
+    ]
+}
