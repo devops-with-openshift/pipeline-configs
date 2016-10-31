@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ops
+    name: ops
+  name: ops
+  namespace: cicd
+spec:
+  output: {}
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    type: None
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |
+        #!groovy
+        node() {
+          stage 'build'
+          openshiftBuild(buildConfig: 'ops', showBuildLogs: 'true', namespace: 'welcome', waitTime: '3000000')
+        }
+    type: JenkinsPipeline
+  triggers:
+  - github:
+      secret: secret101
+    type: GitHub
+  - generic:
+      secret: secret101
+    type: Generic
+status:
+  lastVersion: 0
+EOF
+cat <<EOF | oc create -f -
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    app: foo
+    name: foo
+  name: foo
+  namespace: cicd
+spec:
+  output: {}
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    type: None
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |
+        #!groovy
+        node() {
+          stage 'build & deploy'
+          openshiftBuild(buildConfig: 'foo', showBuildLogs: 'true', namespace: 'welcome', waitTime: '3000000')
+          stage 'verify deploy'
+          openshiftVerifyDeployment(namespace: 'welcome', depCfg: 'foo', replicaCount:'1', verifyReplicaCount: 'true', waitTime: '300000')
+        }
+    type: JenkinsPipeline
+  triggers:
+  - github:
+      secret: secret101
+    type: GitHub
+  - generic:
+      secret: secret101
+    type: Generic
+status:
+  lastVersion: 0
