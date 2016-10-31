@@ -32,8 +32,6 @@ spec:
     type: Generic
 status:
   lastVersion: 0
-EOF
-cat <<EOF | oc create -f -
 apiVersion: v1
 kind: BuildConfig
 metadata:
