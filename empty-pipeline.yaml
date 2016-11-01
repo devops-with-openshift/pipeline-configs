@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  annotations:
+  creationTimestamp: null
+  labels:
+    app: pipeline
+    name: pipeline
+  name: pipeline
+spec:
+  output: {}
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    secrets: null
+    type: None
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: "#!groovy\n"
+    type: JenkinsPipeline
+  triggers:
+  - github:
+      secret: secret101
+    type: GitHub
+  - generic:
+      secret: secret101
+    type: Generic
+status:
+  lastVersion: 0
