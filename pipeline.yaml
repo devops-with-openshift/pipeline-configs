@@ -15,7 +15,7 @@ spec:
     type: None
   strategy:
     jenkinsPipelineStrategy:
-      jenkinsfile: "  node('maven') {\n  stage 'build & deploy in dev'\n  openshiftBuild(namespace:
+      jenkinsfile: "node('maven') {\n  stage 'build & deploy in dev'\n  openshiftBuild(namespace:
         'development',\n  \t\t\t    buildConfig: 'myapp',\n\t\t\t    showBuildLogs:
         'true',\n\t\t\t    waitTime: '3000000')\n  \n  stage 'verify deploy in dev'\n
         \ openshiftVerifyDeployment(namespace: 'development',\n\t\t\t\t       depCfg:
@@ -31,7 +31,7 @@ spec:
         \      verifyReplicaCount: 'true',\n\t\t\t\t       waitTime: '300000')\n  \n
         \ stage 'Deploy to production'\n  timeout(time: 2, unit: 'DAYS') {\n      input
         message: 'Approve to production?'\n }\n\n  openshiftTag(namespace:
-        'development',\n  \t\t\t  sourceStream: 'myapp',\n\t\t\t  sourceTag: 'latest',\n\t\t\t
+        'development',\n  \t\t\t  sourceStream: 'myapp',\n\t\t\t  sourceTag: 'promoteQA',\n\t\t\t
         \ destinationStream: 'myapp',\n\t\t\t  destinationTag: 'promotePRD')\n\n  \n
         \ openshiftDeploy(namespace: 'production',\n  \t\t\t     deploymentConfig:
         'myapp',\n\t\t\t     waitTime: '300000')\n  \n  openshiftScale(namespace:
